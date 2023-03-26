@@ -24,7 +24,7 @@ export default function App() {
     const [ddd, setDDD] = useState(null);
     const webcamRef = React.useRef(null);
     const imgRef = React.useRef(null);
-    const [skinState, setSkinState] = React.useState('healthy');
+    const [skinState, setSkinState] = React.useState(null);
     const [chatMessages, setChatMessages] = useState([{
         message: "Hi. This is SkinSafeGPT. How can I help you?",
         messageType: "ai",
@@ -177,7 +177,7 @@ export default function App() {
             sendAt: new Date()
         })
         setChatMessages(tempArray);
-        
+
         await axios.post("https://us-central1-docgpt-e20ee.cloudfunctions.net/entries/internal/hello",
           {
             message: "Hello! You are my skin care expert and I have a few questions to ask you regarding skin care and skin cancer. " + inputText
@@ -396,15 +396,15 @@ export default function App() {
                             <h3>
                                 { skinState == 'healthy' ? "You're healthy! ✅" : skinState == 'sick' ? "Detected!  🔴" : ''}
                             </h3>
-                            {skinState == 'healthy' ? 
+                            {skinState == 'healthy' ?
                               <p style={{margin: 0}}>
                                   This image resembles a benign mole. You probably have nothing to worry about but make
                                   sure you get it checked by a dermatologist. Our AI-powered dermatologist is here to
                                   answer any questions you might&nbsp;have.
                               </p>
-                            : 
+                            :
                               <p style={{margin: 0}}>
-                                This image resembles a potentially malignant mole. Our recommendation is to book an appointment with a dermatologist as soon as possible. 
+                                This image resembles a potentially malignant mole. Our recommendation is to book an appointment with a dermatologist as soon as possible.
                                 In the meantime, our AI-powered dermatologist is here to answer any questions you might&nbsp;have.
                               </p>
                             }
