@@ -99,6 +99,7 @@ export default function App() {
         const skinStateClasses = skinStateModel.predict(imgFeature);
         const skinClassPred = tf.argMax(tf.bincount(skinStateClasses, [], 2)).arraySync();
         const skinStatePrediction = SKIN_STATE[skinClassPred];
+        console.log("skinStatePrediction", skinStatePrediction)
         setSkinState(skinStatePrediction);
     }
 
