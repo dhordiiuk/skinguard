@@ -1,6 +1,6 @@
 import * as tf from "@tensorflow/tfjs";
 import * as tflite from '@tensorflow/tfjs-tflite';
-import skinStateModel from './models/skin_state_classifier.tflite';
+import skinStateModel from './models/skin_state_classifier_35.tflite';
 
 export const SKIN_STATE = {
     0: 'healthy',
