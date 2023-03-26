@@ -9,6 +9,9 @@ import 'react-html5-camera-photo/build/css/index.css';
 import {SKIN_STATE, getFeaturesModel, getSkinStateModel} from './modelsProcessing';
 import * as tflite from '@tensorflow/tfjs-tflite';
 import "@tensorflow/tfjs-backend-webgl"; // set backend to webgl
+import { saveAs } from 'file-saver'
+import goodImage from './resources/good.jpg';
+import badImage from './resources/bad.jpg';
 
 export default function App() {
     const [isCameraVisible, setIsCameraVisible] = useState(false);
@@ -21,7 +24,7 @@ export default function App() {
     const [ddd, setDDD] = useState(null);
     const webcamRef = React.useRef(null);
     const imgRef = React.useRef(null);
-    const [skinState, setSkinState] = React.useState(null);
+    const [skinState, setSkinState] = React.useState('healthy');
     const [chatMessages, setChatMessages] = useState([{
         message: "Hi. This is SkinSafeGPT. How can I help you?",
         messageType: "ai",
@@ -474,7 +477,7 @@ export default function App() {
             <div className={styles.container}>
                 <main>
                     <h3 className={styles.title3}>
-                        Take a picture of your mole
+                        Take a close picture of your mole
                     </h3>
                     <Camera
                         ref={webcamRef}
@@ -543,6 +546,14 @@ export default function App() {
         )
     }
 
+    const downloadBenignImage = () => {
+      saveAs('https://storage.thephapp.com/skin%2Fgood.jpg', 'benign.jpg') // Put your image url here.
+    }
+
+    const downloadMalignantImage = () => {
+      saveAs('https://storage.thephapp.com/skin%2Fbad.jpeg', 'malignant.jpeg') // Put your image url here.
+    }
+
     return (
         <div className={styles.container}>
             <main>
@@ -553,10 +564,6 @@ export default function App() {
                 <h1 className={styles.title}>
                     AI Dermatologist: Detect skin cancer early
                 </h1>
-
-                {/* <h1 className={styles.title}>
-          1 in 5 Americans will develop skin cancer
-        </h1> */}
 
                 <p className={styles.description}>
                     1 in 5 Americans will develop skin cancer. Melanoma is the deadliest type of skin cancer, but if you
@@ -571,6 +578,9 @@ export default function App() {
                     <Button icon={<CameraOutlined/>} style={{marginTop: "0px"}} onClick={handleOpenCamera}>Take a
                         picture</Button>
                 </div>
+                <p className="">
+                  <a href={goodImage} download="good.jpg" target='_blank'>Here</a> is a picture of a benign (healthy) mole and <a href={badImage} download="bad.jpg" target='_blank'>here</a> is a picture of a malignant (problematic) mole that you can use to test.
+                </p>
             </main>
 
             <style jsx>{`
