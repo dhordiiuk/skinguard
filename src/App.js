@@ -575,7 +575,7 @@ export default function App() {
                     <Button icon={<CameraOutlined/>} style={{marginTop: "0px"}} onClick={handleOpenCamera}>Take a
                         picture</Button>
                 </div>
-                <p className="">
+                <p className="" style={{textAlign: "center"}}>
                   <a href={goodImage} download="good.jpg" target='_blank'>Here</a> is a picture of a benign (healthy) mole and <a href={badImage} download="bad.jpg" target='_blank'>here</a> is a picture of a malignant (problematic) mole that you can use to test.
                 </p>
             </main>
