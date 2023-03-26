@@ -345,9 +345,6 @@ export default function App() {
                         title={""}
                         extra={
                             <>
-                                {/* <Tooltip placement="bottomRight" title="Reset the chat with your document">
-                  <Button type="link" style={{paddingRight: "0px"}} onClick={handleResetClick}>Take another picture</Button>
-                </Tooltip> */}
                                 <Tooltip placement="bottomRight" title="Close the current chat">
                                     <Button type="link" style={{paddingRight: "0px"}}
                                             onClick={handleCloseClick}>Close</Button>
@@ -389,17 +386,24 @@ export default function App() {
                                     width: "50vw",
                                     maxWidth: 450,
                                     borderRadius: "15px",
-                                    border: "3px solid "
+                                    border: skinState == 'healthy' ? "3px solid green" : "3px solid red"
                                 }}
                             />
                             <h3>
                                 { skinState == 'healthy' ? "You're healthy! ✅" : skinState == 'sick' ? "Detected!  🔴" : ''}
                             </h3>
-                            <p style={{margin: 0}}>
-                                This image resembles a benign mole. You probably have nothing to worry about but make
-                                sure you get it checked by a dermatologist. Our AI-powered dermatologist is here to
-                                answer any questions you might&nbsp;have.
-                            </p>
+                            {skinState == 'healthy' ? 
+                              <p style={{margin: 0}}>
+                                  This image resembles a benign mole. You probably have nothing to worry about but make
+                                  sure you get it checked by a dermatologist. Our AI-powered dermatologist is here to
+                                  answer any questions you might&nbsp;have.
+                              </p>
+                            : 
+                              <p style={{margin: 0}}>
+                                This image resembles a potentially malignant mole. Our recommendation is to book an appointment with a dermatologist as soon as possible. 
+                                In the meantime, our AI-powered dermatologist is here to answer any questions you might&nbsp;have.
+                              </p>
+                            }
                             <Button type="primary" htmlType="submit" style={{width: "100%", marginTop: "1rem"}}
                                     onClick={handleChatOpen}>
                                 Chat with SkinSafeGPT
