@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, message, Upload, Card, Tooltip, List, Space, Input } from 'antd';
 import { CameraOutlined, UploadOutlined } from '@ant-design/icons';
 import Camera from 'react-html5-camera-photo';
+import axios from 'axios';
 import 'react-html5-camera-photo/build/css/index.css';
 
 export default function App() {
@@ -88,7 +89,7 @@ export default function App() {
     setInputText(e.target.value);
   }
 
-  const handleInputTextEnter = () => {
+  const handleInputTextEnter = async () => {
     var d1 = new Date();
     var d2 = new Date( d1.getUTCFullYear(), d1.getUTCMonth(), d1.getUTCDate(), d1.getUTCHours(), d1.getUTCMinutes(), d1.getUTCSeconds());
 
@@ -115,19 +116,22 @@ export default function App() {
     })
     setChatMessages(tempArray);
 
-    //store ai reply
-    setTimeout(() => {
-        d1 = new Date();
-        d2 = new Date( d1.getUTCFullYear(), d1.getUTCMonth(), d1.getUTCDate(), d1.getUTCHours(), d1.getUTCMinutes(), d1.getUTCSeconds());
+    await axios.post("https://us-central1-docgpt-e20ee.cloudfunctions.net/entries/internal/hello",
+    {
+      message: "Hello! You are my skin care expert and I have a few questions to ask you regarding skin care and skin cancer. " + inputText
+    }).then(result => {
+      console.log("result", result)
+      d1 = new Date();
+      d2 = new Date( d1.getUTCFullYear(), d1.getUTCMonth(), d1.getUTCDate(), d1.getUTCHours(), d1.getUTCMinutes(), d1.getUTCSeconds());
 
-        const tempArray = chatMessages;
-        tempArray[tempArray.length - 1].message = "Hmmm, I see."
-        setChatMessages(tempArray);
+      const tempArray = chatMessages;
+      tempArray[tempArray.length - 1].message = result.data.message.content
+      setChatMessages(tempArray);
 
-        setDDD(Date.now())
-
-        // storeMessage("Hmmm, I see.", "ai")
-    }, 5000);
+      setDDD(Date.now())
+    }).catch(error => {
+      console.log("error", error)
+    });
   }
 
   if(isChatVisible) {
