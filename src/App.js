@@ -20,6 +20,7 @@ export default function App() {
     const [ddd, setDDD] = useState(null);
     const webcamRef = React.useRef(null);
     const imgRef = React.useRef(null);
+    const [skinState, setSkinState] = React.useState(null);
     const [chatMessages, setChatMessages] = useState([{
         message: "Hi. This is SkinSafeGPT. How can I help you?",
         messageType: "ai",
@@ -94,7 +95,7 @@ export default function App() {
         const skinStateClasses = skinStateModel.predict(imgFeature);
         const skinClassPred = tf.argMax(tf.bincount(skinStateClasses, [], 2)).arraySync();
         const skinStatePrediction = SKIN_STATE[skinClassPred];
-        console.log('skinStatePrediction', skinStatePrediction);
+        setSkinState(skinStatePrediction);
     }
 
     const handleTakePhoto = (dataUri) => {
@@ -387,11 +388,11 @@ export default function App() {
                                     width: "50vw",
                                     maxWidth: 450,
                                     borderRadius: "15px",
-                                    border: "3px solid green"
+                                    border: "3px solid "
                                 }}
                             />
                             <h3>
-                                All good! ✅
+                                { skinState == 'healthy' ? "You're healthy! ✅" : skinState == 'sick' ? "Detected!  🔴" : ''}
                             </h3>
                             <p style={{margin: 0}}>
                                 This image resembles a benign mole. You probably have nothing to worry about but make
