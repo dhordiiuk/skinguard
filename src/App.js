@@ -149,7 +149,7 @@ export default function App() {
         console.log('imgRef.current', imgRef.current);
     }, [setTestPicture]);
 
-    const handleInputTextEnter = () => {
+    const handleInputTextEnter = async() => {
         var d1 = new Date();
         var d2 = new Date(d1.getUTCFullYear(), d1.getUTCMonth(), d1.getUTCDate(), d1.getUTCHours(), d1.getUTCMinutes(), d1.getUTCSeconds());
 
