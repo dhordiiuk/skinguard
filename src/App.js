@@ -13,6 +13,7 @@ import { saveAs } from 'file-saver'
 import goodImage from './resources/good.jpg';
 import badImage from './resources/bad.jpg';
 
+
 export default function App() {
     const [isCameraVisible, setIsCameraVisible] = useState(false);
     const [isResultVisible, setIsResultVisible] = useState(false);
@@ -47,11 +48,6 @@ export default function App() {
         });
     }, []);
 
-
-    async function predictionFunction() {
-
-    }
-
     const props = {
         name: 'file',
         multiple: false,
@@ -74,7 +70,8 @@ export default function App() {
 
                 setTimeout(() => {
                     predictSkinState();
-                }, 500);
+                    predictSkinState();
+                }, 500)
             } else if (info.file.status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
             }
@@ -82,24 +79,26 @@ export default function App() {
     };
 
     const predictSkinState = () => {
-        const im = document.getElementById("target-image");
-        const tensor = tf.browser.fromPixels(im);
-        console.log('tensor', tensor);
+        if (imgRef.current && featuresModel && skinStateModel) {
+            tf.engine().startScope();
+            const tensor = tf.browser.fromPixels(imgRef.current);
 
-        const scaledImage = tensor.div(tf.scalar(255.));
+            const scaledImage = tensor.div(tf.scalar(255.));
 
-        let frameTensor = scaledImage
-            .resizeBilinear([224, 224])
-            .reshape([1, 224, 224, 3]);
+            let frameTensor = scaledImage
+                .resizeBilinear([224, 224])
+                .reshape([1, 224, 224, 3]);
 
-        // get Image Embedding from MobileNet
-        const imgFeature = featuresModel.predict(frameTensor).flatten();
-        console.log('imgFeature', imgFeature);
-        // get skin state predictions
-        const skinStateClasses = skinStateModel.predict(imgFeature);
-        const skinClassPred = tf.argMax(tf.bincount(skinStateClasses, [], 2)).arraySync();
-        const skinStatePrediction = SKIN_STATE[skinClassPred];
-        setSkinState(skinStatePrediction);
+            // get Image Embedding from MobileNet
+            const imgFeature = featuresModel.predict(frameTensor).flatten();
+            // get skin state predictions
+            const skinStateClasses = skinStateModel.predict(imgFeature);
+            const skinClassPred = tf.argMax(tf.bincount(skinStateClasses, [], 2)).arraySync();
+            const skinStatePrediction = SKIN_STATE[skinClassPred];
+            setSkinState(skinStatePrediction);
+            tf.dispose([tensor, scaledImage, frameTensor, imgFeature]);
+            tf.engine().endScope();
+        }
     }
 
     const handleTakePhoto = (dataUri) => {
@@ -112,6 +111,7 @@ export default function App() {
             setIsResultVisible(true)
 
             setTimeout(() => {
+                predictSkinState();
                 predictSkinState();
             }, 500);
         }, 1500);
@@ -148,10 +148,6 @@ export default function App() {
     const handleInputTextChange = (e) => {
         setInputText(e.target.value);
     }
-
-    useEffect(() => {
-        console.log('imgRef.current', imgRef.current);
-    }, [setTestPicture]);
 
     const handleInputTextEnter = async() => {
         var d1 = new Date();
@@ -384,6 +380,7 @@ export default function App() {
                             </h3>
                             <img
                                 src={testPicture}
+                                ref={imgRef}
                                 id="target-image"
                                 style={{
                                     width: "50vw",
